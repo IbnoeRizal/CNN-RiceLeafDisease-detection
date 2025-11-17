@@ -1,0 +1,191 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: whitesmoke;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    color: #333;
+}
+#active{
+    display: block;
+}
+#inactive{
+    display: none;
+}
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.healthstatus {
+    background: white;
+    padding: 15px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    font-size: 18px;
+}
+
+.healthstatus span b {
+    color: #345293;
+}
+
+#healthnow {
+    padding: 5px 15px;
+    background: #f0f0f0;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+#toggle_camera_and_form {
+    background: #de5656;
+    color: white;
+    border: none;
+    padding: 15px 15px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 5px;
+    left: 5px;
+}
+
+#toggle_camera_and_form:hover {
+    background:  #c47979;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+}
+
+#toggle_camera_and_form:active {
+    transform: translateY(0);
+}
+
+#vid {
+    display: none;
+}
+
+canvas {
+    display: block;
+    max-width: 640px;
+    min-width: 300px;
+    width: 100%;
+    height: 70vh;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    margin-bottom: 20px;
+    background: #000;
+}
+
+.listbutton {
+    margin-bottom: 30px;
+}
+
+#togglestartandstop {
+    background: #2196F3;
+    color: white;
+    border: none;
+    padding: 15px 15px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+#togglestartandstop:hover {
+    background: #0b7dda;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+}
+
+#togglestartandstop:active {
+    transform: translateY(0);
+}
+
+form {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    display: none;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 400px;
+    width: 100%;
+}
+
+form label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #667eea;
+}
+
+form input[type="file"] {
+    padding: 10px;
+    border: 2px rgb(0, 0, 0);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+form input[type="file"]:hover {
+    border-color: #764ba2;
+    background: #f9f9f9;
+}
+
+form button[type="submit"] {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    font-weight: 600;
+}
+
+form button[type="submit"]:hover {
+    background: #24274d;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+}
+
+form button[type="submit"]:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .healthstatus {
+        padding: 12px 20px;
+        font-size: 16px;
+    }
+
+    #toggle_camera_and_form,
+    #togglestartandstop {
+        padding: 12px 30px;
+        font-size: 14px;
+    }
+
+    form {
+        padding: 20px;
+    }
+}
