@@ -8,6 +8,7 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: whitesmoke;
     min-height: 100vh;
+    min-width: 500px;
     display: flex;
     flex-direction: column;
     align-items: center;

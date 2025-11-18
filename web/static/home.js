@@ -6,99 +6,140 @@ const form = document.getElementById('form');
 const container = document.querySelector('.container');
 const actv = document.getElementById('active');
 const inactv = document.getElementById('inactive');
+const health = document.getElementById('healthnow');
 
 const context = canv.getContext('2d');
 
+// GLOBAL LOOP ID
+let drawLoop = null;
+
+function sendFrame() {
+    canv.toBlob(blob => {
+        const fd = new FormData();
+        fd.append('file', blob, 'capture.png');
+
+        fetch(form.getAttribute('action'), {
+            method: 'POST',
+            body: fd
+        })
+        .then(r => r.text())
+        .then(t => health.innerText = t)
+        .catch(e => console.log(e));
+    }, 'image/png');
+}
+
+
 const stream = (function () {
-    let streamPromise = null;
-
-    const createstream = () => {
-        streamPromise = new Promise((resolve, reject) => {
-
-            navigator.mediaDevices.getUserMedia({
-                video: {
-                    facingMode: "environment",
-                },})
-                .then(x => {
-                    resolve(x);
-                })
-                .catch(err => {
-                    alert(`Could not access the camera. Please allow permissions and try again.`);
-                    reject(null);
-                });
-        });
-    };
+    let streamObj = null;
 
     return {
-        status: () => {
-            return streamPromise != null;
-        },
+
+        status: () => streamObj !== null,
 
         get: async () => {
-            if (!streamPromise)
-                createstream();
+            if (streamObj) return streamObj;
 
-            return await streamPromise;
+            streamObj = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: "environment" }
+            });
+
+            return streamObj;
         },
 
-        del: async () => {
-            if (!streamPromise) return;
-
-            const s = await streamPromise;
-            s.getTracks().forEach(t => t.stop());
-            streamPromise = null;
+        del: () => {
+            if (!streamObj) return;
+            streamObj.getTracks().forEach(t => t.stop());
+            streamObj = null;
         }
     };
 })();
 
-const drawer = async () => {
+
+function startDrawing() {
+    const draw = () => {
+        context.drawImage(video, 0, 0, canv.width, canv.height);
+        drawLoop = requestAnimationFrame(draw);
+    };
+    draw();
+}
+
+function stopDrawing() {
+    if (drawLoop) cancelAnimationFrame(drawLoop);
+    drawLoop = null;
+}
+
+
+async function drawer() {
     if (!stream.status()) {
         video.srcObject = await stream.get();
-        await video.play(); // penting!
+        await video.play();
 
-        let loop;
-        const draw = () =>{
-            context.drawImage(video, 0, 0, canv.width, canv.height);
-            loop = requestAnimationFrame(draw);
-        };
-
-        draw();
-        on_off.dataset.loop = loop; // simpan ID loop
-    }
-    else {
+        startDrawing();
+        looper();
+    } else {
         stream.del();
-        cancelAnimationFrame(on_off.dataset.loop);
+        stopDrawing();
     }
 }
-const activebutton = function(){
-    if(inactv.style.display === 'none'){
+
+function looper() {
+    const timeout = 1500;
+
+    const tick = () => {
+        if (!stream.status()) return;
+        sendFrame();
+        setTimeout(tick, timeout);
+    };
+
+    tick();
+}
+
+function activebutton() {
+    if (getComputedStyle(inactv).display === 'none') {
         inactv.style.display = 'block';
         actv.style.display = 'none';
-    }else{
+    } else {
         inactv.style.display = 'none';
         actv.style.display = 'block';
     }
 }
 
-on_off.addEventListener('click',async()=>{
+on_off.addEventListener('click', async () => {
     await drawer();
-    activebutton()
-    
-})
+    activebutton();
+});
 
 toggleF.addEventListener('click', () => {
-    if(form.style.display == 'none'){
+    const formHidden = getComputedStyle(form).display === 'none';
+
+    if (formHidden) {
+        // tampilkan form, sembunyikan kamera
         form.style.display = 'flex';
-        if(stream.status()){
-            drawer();
+        container.style.display = 'none';
+
+        if (stream.status()) {
+            drawer(); // matikan kamera
             activebutton();
         }
-        container.style.display = 'none';
+
         toggleF.textContent = 'Kamera';
-    }else{
+    } else {
+        // tampilkan kamera
         form.style.display = 'none';
         container.style.display = 'flex';
         toggleF.textContent = 'Form';
     }
+});
 
-})
+
+form.addEventListener('submit', ev => {
+    ev.preventDefault();
+
+    fetch(form.getAttribute('action'), {
+        method: 'POST',
+        body: new FormData(form)
+    })
+    .then(res => res.text())
+    .then(t => health.innerText = t)
+    .catch(e => console.log(e));
+});
