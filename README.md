@@ -4,7 +4,7 @@
 
 you have to install python and set it up first !
 ``` bash
-    pip pip install -r requirements.txt
+    pip install -r requirements.txt
 ```
 * Running Server 
 ``` bash
