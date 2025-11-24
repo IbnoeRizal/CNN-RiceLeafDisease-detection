@@ -22,7 +22,7 @@ function sendFrame() {
             method: 'POST',
             body: fd
         })
-        .then(r => r.text())
+        .then(r => handleprobability(r))
         .then(t => health.innerText = t)
         .catch(e => console.log(e));
     }, 'image/png');
@@ -40,7 +40,11 @@ const stream = (function () {
             if (streamObj) return streamObj;
 
             streamObj = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: "environment" }
+                video: { 
+                    facingMode: "environment",
+                    width : {ideal:1280},
+                    height : {ideal:720}
+                 }
             });
 
             return streamObj;
@@ -56,6 +60,9 @@ const stream = (function () {
 
 
 function startDrawing() {
+    canv.width = video.videoWidth;
+    canv.height = video.videoHeight;
+
     const draw = () => {
         context.drawImage(video, 0, 0, canv.width, canv.height);
         drawLoop = requestAnimationFrame(draw);
@@ -139,7 +146,30 @@ form.addEventListener('submit', ev => {
         method: 'POST',
         body: new FormData(form)
     })
-    .then(res => res.text())
+    .then(res => handleprobability(res))
     .then(t => health.innerText = t)
     .catch(e => console.log(e));
 });
+
+function handleprobability(response){
+    return new Promise((res,rej) => {
+        response.json()
+        .then( x => {
+            if(x?.error) 
+                rej(x.error);
+
+            let y = '';
+            let m = -1;
+
+            for(const {confidence, label} of x){
+                // console.error("ini conf", confidence, "=====", "ini label", label);
+                if(m >= confidence) continue;
+                y = label;
+                m = confidence;
+            }
+
+            res(`${y}, confidence ${(m*100).toFixed(2)} %`);
+        })
+        .catch(x => {rej(x)});
+    })
+}
