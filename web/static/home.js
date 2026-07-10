@@ -151,6 +151,34 @@ form.addEventListener('submit', ev => {
     .catch(e => console.log(e));
 });
 
+(function(){
+    const id = "previewimg";
+    let img = document.getElementById(id);
+    
+    if(img) return;
+    const label = form.getElementsByTagName("label").item(0);
+    img = document.createElement("img")
+    img.style.cssText = "width : 80%; height: auto; margin: 10px auto;";
+    img.id = id;
+    label.after(img);
+
+
+    const selector = form.getElementsByTagName("input").namedItem("file");
+    selector.addEventListener("change",(element)=>{
+        const file = element.target.files[0];
+        if(!file){
+            img.style.display = "none";
+            return;
+        };
+
+        const url = URL.createObjectURL(file);
+        img.src = url;
+        img.style.display = "block";
+    })
+    
+
+})();
+
 function handleprobability(response){
     return new Promise((res,rej) => {
         response.json()
