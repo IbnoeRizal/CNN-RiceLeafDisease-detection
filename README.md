@@ -2,10 +2,12 @@
 
 * Setup
 
-you have to install python and set it up first !
+install conda and run this command :
+
 ``` bash
-    pip install -r requirements.txt
+    conda env create -f environment.yml    
 ```
+
 * Running Server 
 ``` bash
     cp .env.example .env #copy .env.example to .env

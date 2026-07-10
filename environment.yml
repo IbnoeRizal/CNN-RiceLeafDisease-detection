@@ -25,7 +25,7 @@ dependencies:
   - libzlib=1.3.1=h02ab6af_0
   - matplotlib-inline=0.2.1=pyhd8ed1ab_0
   - nest-asyncio=1.6.0=pyhd8ed1ab_1
-  - openssl=3.6.0=h725018a_0
+  - openssl
   - packaging=25.0=pyh29332c3_1
   - parso=0.8.5=pyhcf101f3_0
   - pip=25.3=pyhc872135_0
